@@ -1,5 +1,6 @@
-class Library
+require "date"
 
+class Library
   def initialize
     @books = []
     @authors = []
@@ -15,42 +16,66 @@ class Library
     @authors << author
   end
 
-  def to_s
-    "Books: #{@books.size} "\
-    "Authors: #{@authors.size} "\
-    "Orders: #{@orders.size} "\
-    "Readers: #{@readers.size}"
+  def add_order(order)
+    @orders << order
   end
+
+  def add_reader(reader)
+    @readers << reader
+  end
+
+  def to_s
+    "Books:\n #{@books.map(&:to_s).join("\n")}\n"\
+    "Authors:\n #{@authors.map(&:to_s).join("\n")}\n"\
+    "Orders:\n #{@orders.map(&:to_s).join("\n")}\n"\
+    "Readers:\n #{@readers.map(&:to_s).join("\n")}"
+  end
+
 end
 
 class Book
-  attr_reader :title, :autor
-  def initialize(title, autor)
+  attr_reader :title, :author
+
+  def initialize(title, author)
     @title = title
-    @autor = autor
+    @author = author
   end
 
+  def to_s
+    "{ title: #{title}, author:\n #{author}\n }"
+  end
 end
 
 class Author
   attr_reader :name, :biography
+
   def initialize(name, biography)
     @name = name
     @biography = biography
   end
+
+  def to_s
+    "{ name: #{name}, biography: #{biography} }"
+  end
 end
 
-class Order < Book
+class Order
   attr_reader :book, :reader, :date
-  def initialize(book, reader, date)
 
+  def initialize(book, reader, date = Date.today)
+    @book = book
     @reader = reader
     @date = date
+  end
+
+  def to_s
+    "{ book:\n #{book},\n reader:\n #{reader},\n date:\n #{date}\n }"
   end
 end
 
 class Reader
   attr_reader :name, :email, :city, :street, :house
+
   def initialize(name, email, city, street, house)
     @name = name
     @email = email
@@ -59,21 +84,19 @@ class Reader
     @house = house
   end
 
-
+  def to_s
+    "{ name: #{name}, email: #{email}, city: #{city}, street: #{street}, house: #{house} }"
+  end
 end
 
-
 library = Library.new
-book = Book.new(3, 45)
-order = Order.new(10, 10, 10, Time.now)
-author = Author.new(44, 55)
-reader = Reader.new(9, 9, 9, 9, 9)
+author = Author.new('name1', 'biography1')
+book = Book.new('book1', author)
+reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
+order = Order.new(book, reader)
 library.add_book(book)
 library.add_author(author)
+library.add_order(order)
+library.add_reader(reader)
 
 puts library.to_s
-puts order.book
-puts order.reader
-puts order.date
-puts order.title
-puts reader
