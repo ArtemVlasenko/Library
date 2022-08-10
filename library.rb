@@ -39,11 +39,38 @@ class Book
   def initialize(title, author)
     @title = title
     @author = author
+    validate_book
   end
 
   def to_s
     "{ title: #{title}, author:\n #{author}\n }"
   end
+
+  def titles_book
+    @title
+  rescue ZeroDivisionError => e
+    "argument must not be zero"
+  end
+
+  def authors_book
+    @author
+  rescue ZeroDivisionError => e
+    "argument must not be zero"
+  end
+
+  private
+
+  def validate_book
+    if @title == 0
+      raise ValidationError, "name must be given"
+    elsif !@title.is_a?(String)
+      raise ValidationError, "name must be string"
+    elsif @title.empty?
+      raise ValidationError, "name must be not empty"
+  end
+
+  author < class Author
+
 end
 
 class Author
@@ -52,10 +79,35 @@ class Author
   def initialize(name, biography)
     @name = name
     @biography = biography
+    validate_autor
   end
 
   def to_s
     "{ name: #{name}, biography: #{biography} }"
+  end
+
+  private
+
+  def names_author
+    @name
+  rescue ZeroDivisionError => e
+    "argument must not be zero"
+  end
+
+  def biography_author
+    @biography
+  rescue ZeroDivisionError => e
+    "argument must not be zero"
+  end
+
+  def validate_autor
+    if @name == 0
+      raise ValidationError, "name must be given"
+    elsif !@name.is_a?(String)
+      raise ValidationError, "name must be string"
+    elsif @name.empty?
+      raise ValidationError, "name must be not empty"
+    end
   end
 end
 
@@ -82,16 +134,37 @@ class Reader
     @city = city
     @street = street
     @house = house
+    validate_reader
   end
 
   def to_s
     "{ name: #{name}, email: #{email}, city: #{city}, street: #{street}, house: #{house} }"
   end
+
+  def name_reader
+    @name
+  rescue ZeroDivisionError => e
+    "argument must not be zero"
+  end
+
+  private
+
+  def validate_reader
+    if @name == 0
+      raise ValidationError, "name must be given"
+    elsif !@name.is_a?(String)
+      raise ValidationError, "name must be string"
+    elsif @name.empty?
+      raise ValidationError, "name must be not empty"
+    end
+  end
 end
+
+
 
 library = Library.new
 author = Author.new('name1', 'biography1')
-book = Book.new('book1', author)
+book = Book.new('1', author)
 reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
 order = Order.new(book, reader)
 library.add_book(book)
@@ -100,3 +173,4 @@ library.add_order(order)
 library.add_reader(reader)
 
 puts library.to_s
+puts book.titles
