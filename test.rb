@@ -22,6 +22,7 @@ class Divider
   end
 end
 
+
 class ValidationError < StandardError
 end
 
