@@ -74,7 +74,7 @@ class Book
     if @author.nil?
       raise ValidationError, "name must be given"
     elsif @author.is_a?(Author)
-      raise ValidationError, "name must be string"
+      raise ValidationError, "author must be an instance of Author"
     end
   end
 end
