@@ -67,7 +67,7 @@ class Book
     if @title.nil?
       raise ValidationError, "name must be given"
     elsif !@title.is_a?(String)
-      raise ValidationError, "name must be string"
+      raise ValidationError, "title must be string"
     elsif @title.empty?
       raise ValidationError, "name must be not empty"
     end
