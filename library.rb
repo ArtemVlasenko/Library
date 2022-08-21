@@ -102,10 +102,10 @@ class Author
     elsif @name.empty?
       raise ValidationError, "name must be not empty"
     end
-    if !@biography.is_a?(String)
-      raise ValidationError, "name must be string"
-    elsif @biography.nil?
+    if @biography.nil?
       raise ValidationError, "name must be given"
+    elsif !@biography.is_a?(String)
+      raise ValidationError, "name must be string"
     end
   end
 end
