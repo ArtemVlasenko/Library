@@ -103,7 +103,7 @@ class Author
       raise ValidationError, "name must be not empty"
     end
     if @biography.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "biography must be given"
     elsif !@biography.is_a?(String)
       raise ValidationError, "biography must be string"
     end
