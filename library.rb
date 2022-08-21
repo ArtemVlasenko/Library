@@ -172,11 +172,11 @@ class Reader
       raise ValidationError, "name must be not empty"
     end
     if @email.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "email must be given"
     elsif !@email.is_a?(String)
-      raise ValidationError, "name must be string"
+      raise ValidationError, "email must be string"
     elsif @email.empty?
-      raise ValidationError, "name must be not empty"
+      raise ValidationError, "email must be not empty"
     end
     if @city.nil?
       raise ValidationError, "name must be given"
