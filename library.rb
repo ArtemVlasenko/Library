@@ -65,11 +65,11 @@ class Book
 
   def validate_book
     if @title.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "title must be given"
     elsif !@title.is_a?(String)
       raise ValidationError, "title must be string"
     elsif @title.empty?
-      raise ValidationError, "name must be not empty"
+      raise ValidationError, "title must be not empty"
     end
     if @author.nil?
       raise ValidationError, "author must be given"
