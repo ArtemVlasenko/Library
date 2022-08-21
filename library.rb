@@ -72,7 +72,7 @@ class Book
       raise ValidationError, "name must be not empty"
     end
     if @author.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "author must be given"
     elsif @author.is_a?(Author)
       raise ValidationError, "author must be an instance of Author"
     end
