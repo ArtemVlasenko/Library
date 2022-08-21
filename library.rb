@@ -130,12 +130,17 @@ class Order
     if @book.nil?
       raise ValidationError, "name must be given"
     elsif @book.is_a?(Book)
-      raise ValidationError, "name must be string"
+      raise ValidationError, "book must be an instance of Book"
     end
     if @reader.nil?
       raise ValidationError, "name must be given"
     elsif @reader.is_a?(Reader)
-      raise ValidationError, "name must be string"
+      raise ValidationError, "reader must be an instance of Reader"
+    end
+    if @date.nil?
+      raise ValidationError, "name must be given"
+    elsif @date.is_a?(Date)
+      raise ValidationError, "date must be an instance of Date"
     end
   end
 end
@@ -201,7 +206,7 @@ library = Library.new
 author = Author.new('0', '1')
 book = Book.new('1','1')
 reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
-order = Order.new('0', 0)
+order = Order.new('0', '1', "1")
 library.add_book(book)
 library.add_author(author)
 library.add_order(order)
