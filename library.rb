@@ -139,7 +139,7 @@ class Order
     end
     if @date.nil?
       raise ValidationError, "name must be given"
-    elsif @date.is_a?(Date)
+    elsif @date.is_a?(String)
       raise ValidationError, "date must be an instance of Date"
     end
   end
@@ -206,7 +206,7 @@ library = Library.new
 author = Author.new('0', '1')
 book = Book.new('1','1')
 reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
-order = Order.new('0', '1', "1")
+order = Order.new('0', '1')
 library.add_book(book)
 library.add_author(author)
 library.add_order(order)
