@@ -186,11 +186,11 @@ class Reader
       raise ValidationError, "city must be not empty"
     end
     if @street.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "street must be given"
     elsif !@street.is_a?(String)
-      raise ValidationError, "name must be string"
+      raise ValidationError, "street must be string"
     elsif @street.empty?
-      raise ValidationError, "name must be not empty"
+      raise ValidationError, "street must be not empty"
     end
     if @house.nil?
       raise ValidationError, "name must be given"
