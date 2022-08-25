@@ -40,8 +40,9 @@ class Library
        YAML.load(file)
   end
 
-  def serialize_from_file
-    YAML::dump(self)
+  def save_from_file
+    save = File.new('to_s.yml', 'w')
+    # YAML::dump(self)
   end
 end
 
