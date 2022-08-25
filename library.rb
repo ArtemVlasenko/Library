@@ -2,7 +2,7 @@ require "date"
 require 'yaml'
 
 class Library
-  attr_reader :books, :authors
+  attr_reader :books, :authors, :orders, :readers
   def initialize
     @books = []
     @authors = []
