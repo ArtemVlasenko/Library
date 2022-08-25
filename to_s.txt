@@ -1,4 +1,0 @@
-Book: { title: 1, author: 1 }
-Author: { name: 0, biography: 1 }
-Order: { book: 0, reader: 1, date: 2022-08-21 }
-Readers: { name: name1, email: email1, city: city1, street: street1, house: 1 }

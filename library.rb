@@ -1,4 +1,5 @@
 require "date"
+require 'yaml'
 
 class Library
   attr_reader :books, :authors
@@ -33,18 +34,15 @@ class Library
     "Readers:\n #{@readers.map(&:to_s).join("\n")}"
   end
 
-  def save_from_file
-    File.open("to_s.txt", "w+") do |f|
-      @books.each { |element| f.puts "Book: #{(element)}" }
-      @authors.each { |element| f.puts "Author: #{(element)}" }
-      @orders.each { |element| f.puts "Order: #{(element)}" }
-      @readers.each { |element| f.puts "Readers: #{(element)}" }
-    end
+  def save_to_file
+    objects = [@books, @authors, @orders, @readers]
+    file = YAML.dump(objects)
+      puts file
+       YAML.load(file)
   end
 
-  def read_from_file
-    file = File.readlines("to_s.txt")
-    # file.map! {|i| i.chomp}
+  def serialize_from_file
+    YAML::dump(self)
   end
 end
 
@@ -203,21 +201,34 @@ class Reader
 end
 
 library = Library.new
-author = Author.new('0', '1')
-book = Book.new('1','1')
-reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
+author = Author.new('1', '1')
+book = Book.new('1', '1')
+reader = Reader.new('name1', 'email1', 'city1', 'street1', 2)
 order = Order.new('0', '1')
 library.add_book(book)
 library.add_author(author)
 library.add_order(order)
 library.add_reader(reader)
-# author_error_nil = Author.new(0, '2')
-# author_error_class = Author.new()
-# author_error_empty = Author.new()
+
+output = File.new('to_s.yml', 'w')
+output.puts YAML.dump(library)
+output.close
+
+#  author_error_nil = Author.new('0', '0')
+#  author_error_class = Author.new('0', '0')
+#  author_error_empty = Author.new('0', '0')
+# book_error_nil = Book.new()
+# book_error_class = Book.new()
+# book_error_empty = Book.new()
+# reader_error_nil = Reader.new()
+# reader_error_class = Reader.new()
+# reader_error_empty = Reader.new()
+# order_error_nil = Order.new()
+# order_error_class = Order.new()
+# order_error_empty = Order.new()
 #<class_name_downcase>_<atrribute>_<validation>
 
-library.save_from_file
-library.read_from_file
+ library.save_from_file
 puts library.to_s
 
 #делают dump библиотеки и присваиваю его в переменную, записываю на диск
