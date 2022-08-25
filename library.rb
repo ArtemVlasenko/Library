@@ -35,15 +35,16 @@ class Library
 
   def save_to_file
     objects = [@books, @authors, @orders, @readers]
-    file = YAML.dump(objects)
-      puts file
-       YAML.load(file)
+    to_s = File.open('to_s.txt', 'w')
+    to_s.puts YAML.dump(objects)
+    to_s.close
   end
 
-  def save_from_file
-    save = File.new('to_s.yml', 'w')
-    # YAML::dump(self)
-  end
+  # def read_from_file
+  #   objects = [@books, @authors, @orders, @readers]
+  #   file = YAML.dump(objects)
+  #   YAML.load(file)
+  # end
 end
 
 class Book
@@ -203,16 +204,16 @@ end
 library = Library.new
 author = Author.new('1', '1')
 book = Book.new('1', '1')
-reader = Reader.new('name1', 'email1', 'city1', 'street1', 2)
-order = Order.new('0', '1')
+reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
+order = Order.new('0', '15')
 library.add_book(book)
 library.add_author(author)
 library.add_order(order)
 library.add_reader(reader)
 
-output = File.new('to_s.yml', 'w')
-output.puts YAML.dump(library)
-output.close
+# output = File.new('to_s.yml', 'w')
+# output.puts YAML.dump(library)
+# output.close
 
 #  author_error_nil = Author.new('0', '0')
 #  author_error_class = Author.new('0', '0')
@@ -227,8 +228,8 @@ output.close
 # order_error_class = Order.new()
 # order_error_empty = Order.new()
 #<class_name_downcase>_<atrribute>_<validation>
-
- library.save_from_file
+# library.read_from_file
+library.save_to_file
 puts library.to_s
 
 #делают dump библиотеки и присваиваю его в переменную, записываю на диск
