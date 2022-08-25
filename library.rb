@@ -8,7 +8,6 @@ class Library
     @authors = []
     @orders = []
     @readers = []
-
   end
 
   def add_book(book)
