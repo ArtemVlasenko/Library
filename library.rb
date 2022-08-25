@@ -40,11 +40,11 @@ class Library
     to_s.close
   end
 
-  # def read_from_file
-  #   objects = [@books, @authors, @orders, @readers]
-  #   file = YAML.dump(objects)
-  #   YAML.load(file)
-  # end
+  def read_from_file
+    file = File.read('to_s.txt')
+    file = YAML.dump(file)
+    YAML.load(file)
+  end
 end
 
 class Book
@@ -228,7 +228,7 @@ library.add_reader(reader)
 # order_error_class = Order.new()
 # order_error_empty = Order.new()
 #<class_name_downcase>_<atrribute>_<validation>
-# library.read_from_file
+library.read_from_file
 library.save_to_file
 puts library.to_s
 
