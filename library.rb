@@ -132,7 +132,7 @@ class Order
       raise ValidationError, "book must be an instance of Book"
     end
     if @reader.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "reader must be given"
     elsif @reader.is_a?(Reader)
       raise ValidationError, "reader must be an instance of Reader"
     end
