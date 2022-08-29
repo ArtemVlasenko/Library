@@ -196,7 +196,7 @@ class Reader
     elsif !@house.is_a?(Integer)
       raise ValidationError, "house must be integer"
     elsif !@house.positive?
-      raise ValidationError, "house must be not empty"
+      raise ValidationError, "house must be positive"
     end
   end
 end
