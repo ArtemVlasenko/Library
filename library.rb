@@ -137,7 +137,7 @@ class Order
       raise ValidationError, "reader must be an instance of Reader"
     end
     if @date.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "date must be given"
     elsif @date.is_a?(String)
       raise ValidationError, "date must be an instance of Date"
     end
