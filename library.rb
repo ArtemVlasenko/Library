@@ -127,7 +127,7 @@ class Order
 
   def validate_order
     if @book.nil?
-      raise ValidationError, "name must be given"
+      raise ValidationError, "book must be given"
     elsif @book.is_a?(Book)
       raise ValidationError, "book must be an instance of Book"
     end
