@@ -7,8 +7,8 @@
     biography: '1'
 - - !ruby/object:Order
     book: '0'
-    reader: '15'
-    date: 2022-08-25
+    reader: '0'
+    date: 2022-08-29
 - - !ruby/object:Reader
     name: name1
     email: email1
