@@ -1,7 +1,12 @@
 require "date"
 require 'yaml'
 
+
+class ValidationError < StandardError
+end
+
 class Library
+  SAVE_LIBRARY = 'librarys.txt'
   attr_reader :books, :authors, :orders, :readers
   def initialize
     @books = []
@@ -34,18 +39,19 @@ class Library
   end
 
   def save_to_file
-    objects = [@books, @authors, @orders, @readers]
-    to_s = File.open('to_s.txt', 'w')
-    to_s.puts YAML.dump(objects)
-    to_s.close
+    File.open(SAVE_LIBRARY, 'w') do |file|
+      file.puts YAML::dump(self)
+    end
   end
 
   def read_from_file
-    file = File.read('to_s.txt')
+    file = File.read(SAVE_LIBRARY)
     file = YAML.dump(file)
     YAML.load(file)
+    puts File.exists?(SAVE_LIBRARY)
+    return unless File.exists?(SAVE_LIBRARY)
   end
-end
+ end
 
 class Book
   attr_reader :title, :author
@@ -76,7 +82,7 @@ class Book
       raise ValidationError, "author must be an instance of Author"
     end
   end
-end
+ end
 
 class Author
   attr_reader :name, :biography
@@ -202,7 +208,7 @@ class Reader
 end
 
 library = Library.new
-author = Author.new('1', '1')
+author = Author.new('10', '1')
 book = Book.new('1', '1')
 reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
 order = Order.new('0', '0')
@@ -215,8 +221,384 @@ library.add_reader(reader)
 # output.puts YAML.dump(library)
 # output.close
 
+# author_name_nil = Author.new('nil', 'biography')
+# author_biography_class = Author.new('Name', String.new)
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for book title is nil"
+#   Book.new(nil, author)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "title must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for book title is String"
+#   Book.new(Array.new, author)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "title must be string"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for book title is empty"
+#   Book.new('', author)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "title must be not empty"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for book author is nil"
+#   Book.new('title', nil)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message ==  "author must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for book instance of Author"
+#   Book.new('title', author)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "author must be an instance of Author"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for author name is nil"
+#   Author.new(nil, 'biography')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "name must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for author name is String"
+#   Author.new(Array.new, 'biography')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "name must be string"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for author name is empty"
+#   Author.new('', 'biography')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "name must be not empty"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for book biography is nil"
+#   Author.new('name', nil)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message ==  "biography must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for book biography is String"
+#   Author.new('name', Array.new)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "biography must be string"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for order book is nil"
+#   Order.new(nil, reader)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message ==  "book must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for order book instance of Book"
+#   Order.new(book, reader)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "book must be an instance of Book"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for order reader is nil"
+#   Order.new('book', nil)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message ==  "reader must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for order reader instance of Reader"
+#   Order.new('book', reader)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "reader must be an instance of Reader"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for order date is nil"
+#   Order.new('book', 'date')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message ==  "date must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for order date instance of Date"
+#   Order.new('book', reader)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "date must be an instance of Date"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader name is nil"
+#   Reader.new(nil, 'email', 'city', 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "name must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader name is String"
+#   Reader.new(Array.new, 'email', 'city', 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "name must be string"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader name is empty"
+#   Reader.new('', 'email', 'city', 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "name must be not empty"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader email is nil"
+#   Reader.new('name', nil, 'city', 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "email must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader email is String"
+#   Reader.new('name', Array.new, 'city', 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "email must be string"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader email is empty"
+#   Reader.new('name', '', 'city', 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "email must be not empty"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader city is nil"
+#   Reader.new('name', 'email', nil, 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "city must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader city is String"
+#   Reader.new('name', 'email', Array.new, 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "city must be string"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader city is empty"
+#   Reader.new('name', 'email', '', 'street', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "city must be not empty"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader street is nil"
+#   Reader.new('name', 'email', 'city', nil, 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "street must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader street is String"
+#   Reader.new('name', 'email', 'city', Array.new, 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "street must be string"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader street is empty"
+#   Reader.new('name', 'email', 'city', '', 'house')
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "street must be not empty"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader house is nil"
+#   Reader.new('name', 'email', 'city', 'street', nil)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "house must be given"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader house is String"
+#   Reader.new('name', 'email', 'city', 'street', Array.new)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "house must be integer"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+# begin
+#   puts '**************************************'
+#   puts "Test validation for reader house is positive"
+#   Reader.new('name', 'email', 'city', 'street', 0)
+#   puts "FAIL"
+# rescue ValidationError => error
+#   result = error.message == "house must be positive"
+#   puts result ? 'PASS' : 'FAIL'
+
+#   puts '*****************************************'
+# end
+
+
 #  author_error_nil = Author.new('0', '0')
-#  author_error_class = Author.new('0', '0')
+# author_error_class = Author.new(0, '0')
 #  author_error_empty = Author.new('0', '0')
 # book_error_nil = Book.new()
 # book_error_class = Book.new()
