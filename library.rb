@@ -1,13 +1,14 @@
-require "date"
+require 'date'
 require 'yaml'
-
 
 class ValidationError < StandardError
 end
 
 class Library
-  SAVE_LIBRARY = 'librarys.txt'
+
+  SAVE_LIBRARY = 'librarys.txt'.freeze
   attr_reader :books, :authors, :orders, :readers
+
   def initialize
     @books = []
     @authors = []
@@ -40,7 +41,7 @@ class Library
 
   def save_to_file
     File.open(SAVE_LIBRARY, 'w') do |file|
-      file.puts YAML::dump(self)
+      file.puts YAML.dump(self)
     end
   end
 
@@ -51,7 +52,7 @@ class Library
     puts File.exists?(SAVE_LIBRARY)
     return unless File.exists?(SAVE_LIBRARY)
   end
- end
+end
 
 class Book
   attr_reader :title, :author
@@ -82,7 +83,7 @@ class Book
       raise ValidationError, "author must be an instance of Author"
     end
   end
- end
+end
 
 class Author
   attr_reader :name, :biography
@@ -322,7 +323,7 @@ library.add_reader(reader)
 
 # begin
 #   puts '**************************************'
-#   puts "Test validation for book biography is nil"
+#   puts "Test validation for author biography is nil"
 #   Author.new('name', nil)
 #   puts "FAIL"
 # rescue ValidationError => error
@@ -334,7 +335,7 @@ library.add_reader(reader)
 
 # begin
 #   puts '**************************************'
-#   puts "Test validation for book biography is String"
+#   puts "Test validation for author biography is String"
 #   Author.new('name', Array.new)
 #   puts "FAIL"
 # rescue ValidationError => error
