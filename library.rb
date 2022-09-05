@@ -41,7 +41,7 @@ class Library
 
   def save_to_file
     File.open(SAVE_LIBRARY, 'w') do |file|
-      file.puts YAML.dump(self)
+      file.write YAML.dump(self)
     end
   end
 
