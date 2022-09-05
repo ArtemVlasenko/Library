@@ -345,77 +345,77 @@ library.add_reader(reader)
 #   puts '*****************************************'
 # end
 
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order book is nil"
-#   Order.new(nil, reader)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "book must be given"
-#   puts result ? 'PASS' : 'FAIL'
+begin
+  puts '**************************************'
+  puts "Test validation for order book is nil"
+  Order.new(nil, reader)
+  puts "FAIL"
+rescue ValidationError => error
+  result = error.message ==  "book must be given"
+  puts result ? 'PASS' : 'FAIL'
 
-#   puts '*****************************************'
-# end
+  puts '*****************************************'
+end
 
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order book instance of Book"
-#   Order.new(book, reader)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "book must be an instance of Book"
-#   puts result ? 'PASS' : 'FAIL'
+begin
+  puts '**************************************'
+  puts "Test validation for order book instance of Book"
+  Order.new(book, reader)
+  puts "FAIL"
+rescue ValidationError => error
+  result = error.message == "book must be an instance of Book"
+  puts result ? 'PASS' : 'FAIL'
 
-#   puts '*****************************************'
-# end
+  puts '*****************************************'
+end
 
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order reader is nil"
-#   Order.new('book', nil)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "reader must be given"
-#   puts result ? 'PASS' : 'FAIL'
+begin
+  puts '**************************************'
+  puts "Test validation for order reader is nil"
+  Order.new('book', nil)
+  puts "FAIL"
+rescue ValidationError => error
+  result = error.message ==  "reader must be given"
+  puts result ? 'PASS' : 'FAIL'
 
-#   puts '*****************************************'
-# end
+  puts '*****************************************'
+end
 
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order reader instance of Reader"
-#   Order.new('book', reader)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "reader must be an instance of Reader"
-#   puts result ? 'PASS' : 'FAIL'
+begin
+  puts '**************************************'
+  puts "Test validation for order reader instance of Reader"
+  Order.new('book', reader)
+  puts "FAIL"
+rescue ValidationError => error
+  result = error.message == "reader must be an instance of Reader"
+  puts result ? 'PASS' : 'FAIL'
 
-#   puts '*****************************************'
-# end
+  puts '*****************************************'
+end
 
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order date is nil"
-#   Order.new('book', 'date')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "date must be given"
-#   puts result ? 'PASS' : 'FAIL'
+begin
+  puts '**************************************'
+  puts "Test validation for order date is nil"
+  Order.new('book', 'reader', nil)
+  puts "FAIL"
+rescue ValidationError => error
+  result = error.message ==  "date must be given"
+  puts result ? 'PASS' : 'FAIL'
 
-#   puts '*****************************************'
-# end
+  puts '*****************************************'
+end
 
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order date instance of Date"
-#   Order.new('book', reader)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "date must be an instance of Date"
-#   puts result ? 'PASS' : 'FAIL'
+begin
+  puts '**************************************'
+  puts "Test validation for order date instance of Date"
+  Order.new('book', 'reader', Date)
+  puts "FAIL"
+rescue ValidationError => error
+  result = error.message == "date must be an instance of Date"
+  puts result ? 'PASS' : 'FAIL'
 
-#   puts '*****************************************'
-# end
+  puts '*****************************************'
+end
 
 # begin
 #   puts '**************************************'
