@@ -6,7 +6,7 @@ end
 
 class Library
 
-  SAVE_LIBRARY = 'librarys.txt'.freeze
+  SAVE_LIBRARY = 'librarys.yml'.freeze
   attr_reader :books, :authors, :orders, :readers
 
   def initialize
