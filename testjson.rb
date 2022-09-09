@@ -1,47 +1,13 @@
-require "json"
-require "pry"
+# def print(&block)
+#   block.call
 
-# date = File.read('test.rb')
-# data_hesh = JSON.parse(date)
-# date.close
-
-#  puts data_hesh['divide']
-
-# require 'yaml'
-# # config = YAML.load_file('data.yml')
-
-
-# # Десереализуем в объект
-#  def self.deserialize(yaml_string)
-#   YAML::load(yaml_string)
 # end
+# print {puts a = 2*2}
+# Блок, который мы передаем методу, преобразуется в объект Proc.
 
-# # Объект сериализуем
-# def serialize
-#   YAML::dump(self)
-# end
-
-# ---------------------------
-def save_to_file
-  a = File.readlines(  'library.rb', 'w')
-  a.map! {|i| i.chomp}
-   a.map! {|i| i.split(":")}
-   File.write("to_s.txt")
-  puts a
+def print_phrase(amount, &block)
+  amount.times.each do |x|
+    yield
   end
-  save_to_file
-
-
-
-# def save_to_file
-# a = File.readlines( @first.to_s 'test.rb', 'w')
-# a.map! {|i| i.chomp}
-#  a.map! {|i| i.split(":")}
-# puts a
-# end
-# save_to_file
-
-# -----------------------------
-# File.open("#{@first}_Divider.txt") do |a|
-#   puts a.write()
-# end
+end
+print_phrase(5) { puts "Hello! I'm inside of the method!" }

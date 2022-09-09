@@ -5,15 +5,15 @@ class ValidationError < StandardError
 end
 
 class Library
-
-  SAVE_LIBRARY = 'librarys.yml'.freeze
+  SAVE_LIBRARY = 'libraries.yml'.freeze
   attr_reader :books, :authors, :orders, :readers
 
   def initialize
-    @books = []
-    @authors = []
-    @orders = []
-    @readers = []
+    library = read_from_file
+    @books = library&.books || []
+    @authors = library&.authors || []
+    @orders = library&.orders || []
+    @readers = library&.readers || []
   end
 
   def add_book(book)
@@ -46,11 +46,10 @@ class Library
   end
 
   def read_from_file
-    file = File.read(SAVE_LIBRARY)
-    file = YAML.dump(file)
-    YAML.load(file)
-    puts File.exists?(SAVE_LIBRARY)
-    return unless File.exists?(SAVE_LIBRARY)
+    return unless File.exits?(SAVE_LIBRARY)
+
+    file_read = File.read(SAVE_LIBRARY)
+    YAML.load(file_read)
   end
 end
 
@@ -217,671 +216,264 @@ library.add_book(book)
 library.add_author(author)
 library.add_order(order)
 library.add_reader(reader)
-
-# output = File.new('to_s.yml', 'w')
-# output.puts YAML.dump(library)
-# output.close
-
-# author_name_nil = Author.new('nil', 'biography')
-# author_biography_class = Author.new('Name', String.new)
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for book title is nil"
-#   Book.new(nil, author)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "title must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for book title is String"
-#   Book.new(Array.new, author)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "title must be string"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for book title is empty"
-#   Book.new('', author)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "title must be not empty"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for book author is nil"
-#   Book.new('title', nil)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "author must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for book instance of Author"
-#   Book.new('title', author)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "author must be an instance of Author"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for author name is nil"
-#   Author.new(nil, 'biography')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "name must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for author name is String"
-#   Author.new(Array.new, 'biography')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "name must be string"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for author name is empty"
-#   Author.new('', 'biography')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "name must be not empty"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for author biography is nil"
-#   Author.new('name', nil)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "biography must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for author biography is String"
-#   Author.new('name', Array.new)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "biography must be string"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order book is nil"
-#   Order.new(nil, 'reader', date = Date.today)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "book must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order book instance of Book"
-#   Order.new(book, 'reader')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "book must be an instance of Book"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order reader is nil"
-#   Order.new('book', nil)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "reader must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order reader instance of Reader"
-#   Order.new('book', reader)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "reader must be an instance of Reader"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order date is nil"
-#   Order.new('book', 'reader', nil)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message ==  "date must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for order date instance of Date"
-#   Order.new('book', 'reader', Date)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "date must be an instance of Date"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader name is nil"
-#   Reader.new(nil, 'email', 'city', 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "name must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader name is String"
-#   Reader.new(Array.new, 'email', 'city', 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "name must be string"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader name is empty"
-#   Reader.new('', 'email', 'city', 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "name must be not empty"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader email is nil"
-#   Reader.new('name', nil, 'city', 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "email must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader email is String"
-#   Reader.new('name', Array.new, 'city', 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "email must be string"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader email is empty"
-#   Reader.new('name', '', 'city', 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "email must be not empty"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader city is nil"
-#   Reader.new('name', 'email', nil, 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "city must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader city is String"
-#   Reader.new('name', 'email', Array.new, 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "city must be string"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader city is empty"
-#   Reader.new('name', 'email', '', 'street', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "city must be not empty"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader street is nil"
-#   Reader.new('name', 'email', 'city', nil, 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "street must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader street is String"
-#   Reader.new('name', 'email', 'city', Array.new, 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "street must be string"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader street is empty"
-#   Reader.new('name', 'email', 'city', '', 'house')
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "street must be not empty"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader house is nil"
-#   Reader.new('name', 'email', 'city', 'street', nil)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "house must be given"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader house is String"
-#   Reader.new('name', 'email', 'city', 'street', Array.new)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "house must be integer"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-# begin
-#   puts '**************************************'
-#   puts "Test validation for reader house is positive"
-#   Reader.new('name', 'email', 'city', 'street', 0)
-#   puts "FAIL"
-# rescue ValidationError => error
-#   result = error.message == "house must be positive"
-#   puts result ? 'PASS' : 'FAIL'
-
-#   puts '*****************************************'
-# end
-
-
-
-
-# *******************************************
-
-
-
-
-def check_validation(title, expected_error_message, &block)
-  print title
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for book title is nil", "title must be given") do
-  Book.new(nil, author)
-end
-
-check_validation("Test validation for book title is String", "title must be string") do
-  Book.new(Array.new, author)
-end
-
-check_validation("Test validation for book title is empty", "title must be not empty") do
-  Book.new('', author)
-end
-puts '*****************************************'
-
-def check_validation(author, expected_error_message, &block)
-  print author
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for book author is nil", "author must be given") do
-  Book.new('title', nil)
-end
-
-check_validation("Test validation for book author instance of Author", "author must be an instance of Author") do
-  Book.new('title', author)
-end
-puts '*****************************************'
-
-
-def check_validation(name, expected_error_message, &block)
-  print name
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for author name is nil", "name must be given") do
-  Author.new(nil, 'biography')
-end
-
-check_validation("Test validation for author name is String", "name must be string") do
-  Author.new(Array.new, 'biography')
-end
-
-check_validation("Test validation for author name is empty", "name must be not empty") do
-  Author.new('', 'biography')
-end
-puts '*****************************************'
-
-
-def check_validation(author, expected_error_message, &block)
-  print author
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for author biography is nil", "biography must be given") do
-  Author.new('name', nil)
-end
-
-check_validation("Test validation for author biography is String", "biography must be string") do
-  Author.new('name', Array.new)
-end
-puts '*****************************************'
-
-def check_validation(order, expected_error_message, &block)
-  print order
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for order book is nil", "book must be given") do
-  Order.new(nil, 'reader', date = Date.today)
-end
-
-check_validation("Test validation for order book instance of Book", "book must be an instance of Book") do
-  Order.new(book, 'reader')
-end
-puts '*****************************************'
-
-def check_validation(order, expected_error_message, &block)
-  print order
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for order reader is nil", "reader must be given") do
-  Order.new('book', nil)
-end
-
-check_validation("Test validation for order reader instance of Reader", "reader must be an instance of Reader") do
-  Order.new('book', reader)
-end
-puts '*****************************************'
-
-def check_validation(order, expected_error_message, &block)
-  print order
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for order date is nil", "date must be given") do
-  Order.new('book', 'reader', nil)
-end
-
-check_validation("Test validation for order date instance of Date", "date must be an instance of Date") do
-  Order.new('book', 'reader', Date)
-end
-puts '*****************************************'
-
-def check_validation(reader, expected_error_message, &block)
-  print reader
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for reader name is nil", "name must be given") do
-  Reader.new(nil, 'email', 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader name is String", "name must be string") do
-  Reader.new(Array.new, 'email', 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader name is empty", "name must be not empty") do
-  Reader.new('', 'email', 'city', 'street', 'house')
-end
-puts '*****************************************'
-
-def check_validation(email, expected_error_message, &block)
-  print email
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for reader email is nil", "email must be given") do
-  Reader.new('name', nil, 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader email is String", "email must be string") do
-  Reader.new('name', Array.new, 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader email is empty", "email must be not empty") do
-  Reader.new('name', '', 'city', 'street', 'house')
-end
-puts '*****************************************'
-
-def check_validation(city, expected_error_message, &block)
-  print city
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for reader city is nil", "city must be given") do
-  Reader.new('name', 'email', nil, 'street', 'house')
-end
-
-check_validation("Test validation for reader city is String", "city must be string") do
-  Reader.new('name', 'email', Array.new, 'street', 'house')
-end
-
-check_validation("Test validation for reader city is empty", "city must be not empty") do
-  Reader.new('name', 'email', '', 'street', 'house')
-end
-puts '*****************************************'
-
-
-def check_validation(street, expected_error_message, &block)
-  print street
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for reader street is nil", "street must be given") do
-  Reader.new('name', 'email', 'city', nil, 'house')
-end
-
-check_validation("Test validation for reader street is String", "street must be string") do
-  Reader.new('name', 'email', 'city', Array.new, 'house')
-end
-
-check_validation("Test validation for reader street is empty", "street must be not empty") do
-  Reader.new('name', 'email', 'city', '', 'house')
-end
-puts '*****************************************'
-
-def check_validation(house, expected_error_message, &block)
-  print house
-  block.call
-  puts " -> FAIL!!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
-end
-
-puts '**************************************'
-check_validation("Test validation for reader house is nil", "house must be given") do
-  Reader.new('name', 'email', 'city', 'street', nil)
-end
-
-check_validation("Test validation for reader house is String", "house must be integer") do
-  Reader.new('name', 'email', 'city', 'street', Array.new)
-end
-
-check_validation("Test validation for reader house is positive", "house must be positive") do
-  Reader.new('name', 'email', 'city', 'street', 0)
-end
-puts '*****************************************'
-
-
-
-
-#  author_error_nil = Author.new('0', '0')
-# author_error_class = Author.new(0, '0')
-#  author_error_empty = Author.new('0', '0')
-# book_error_nil = Book.new()
-# book_error_class = Book.new()
-# book_error_empty = Book.new()
-# reader_error_nil = Reader.new()
-# reader_error_class = Reader.new()
-# reader_error_empty = Reader.new()
-# order_error_nil = Order.new()
-# order_error_class = Order.new()
-# order_error_empty = Order.new()
-#<class_name_downcase>_<atrribute>_<validation>
-library.read_from_file
 library.save_to_file
 puts library.to_s
 
-#делают dump библиотеки и присваиваю его в переменную, записываю на диск
+# def check_validation(title, expected_error_message, &block)
+#   print title
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for book title is nil", "title must be given") do
+#   Book.new(nil, author)
+# end
+
+# check_validation("Test validation for book title is String", "title must be string") do
+#   Book.new(Array.new, author)
+# end
+
+# check_validation("Test validation for book title is empty", "title must be not empty") do
+#   Book.new('', author)
+# end
+# puts '*****************************************'
+
+# def check_validation(author, expected_error_message, &block)
+#   print author
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for book author is nil", "author must be given") do
+#   Book.new('title', nil)
+# end
+
+# check_validation("Test validation for book author instance of Author", "author must be an instance of Author") do
+#   Book.new('title', author)
+# end
+# puts '*****************************************'
+
+
+# def check_validation(name, expected_error_message, &block)
+#   print name
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for author name is nil", "name must be given") do
+#   Author.new(nil, 'biography')
+# end
+
+# check_validation("Test validation for author name is String", "name must be string") do
+#   Author.new(Array.new, 'biography')
+# end
+
+# check_validation("Test validation for author name is empty", "name must be not empty") do
+#   Author.new('', 'biography')
+# end
+# puts '*****************************************'
+
+
+# def check_validation(author, expected_error_message, &block)
+#   print author
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for author biography is nil", "biography must be given") do
+#   Author.new('name', nil)
+# end
+
+# check_validation("Test validation for author biography is String", "biography must be string") do
+#   Author.new('name', Array.new)
+# end
+# puts '*****************************************'
+
+# def check_validation(order, expected_error_message, &block)
+#   print order
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for order book is nil", "book must be given") do
+#   Order.new(nil, 'reader', date = Date.today)
+# end
+
+# check_validation("Test validation for order book instance of Book", "book must be an instance of Book") do
+#   Order.new(book, 'reader')
+# end
+# puts '*****************************************'
+
+# def check_validation(order, expected_error_message, &block)
+#   print order
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for order reader is nil", "reader must be given") do
+#   Order.new('book', nil)
+# end
+
+# check_validation("Test validation for order reader instance of Reader", "reader must be an instance of Reader") do
+#   Order.new('book', reader)
+# end
+# puts '*****************************************'
+
+# def check_validation(order, expected_error_message, &block)
+#   print order
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for order date is nil", "date must be given") do
+#   Order.new('book', 'reader', nil)
+# end
+
+# check_validation("Test validation for order date instance of Date", "date must be an instance of Date") do
+#   Order.new('book', 'reader', Date)
+# end
+# puts '*****************************************'
+
+# def check_validation(reader, expected_error_message, &block)
+#   print reader
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for reader name is nil", "name must be given") do
+#   Reader.new(nil, 'email', 'city', 'street', 'house')
+# end
+
+# check_validation("Test validation for reader name is String", "name must be string") do
+#   Reader.new(Array.new, 'email', 'city', 'street', 'house')
+# end
+
+# check_validation("Test validation for reader name is empty", "name must be not empty") do
+#   Reader.new('', 'email', 'city', 'street', 'house')
+# end
+# puts '*****************************************'
+
+# def check_validation(email, expected_error_message, &block)
+#   print email
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for reader email is nil", "email must be given") do
+#   Reader.new('name', nil, 'city', 'street', 'house')
+# end
+
+# check_validation("Test validation for reader email is String", "email must be string") do
+#   Reader.new('name', Array.new, 'city', 'street', 'house')
+# end
+
+# check_validation("Test validation for reader email is empty", "email must be not empty") do
+#   Reader.new('name', '', 'city', 'street', 'house')
+# end
+# puts '*****************************************'
+
+# def check_validation(city, expected_error_message, &block)
+#   print city
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for reader city is nil", "city must be given") do
+#   Reader.new('name', 'email', nil, 'street', 'house')
+# end
+
+# check_validation("Test validation for reader city is String", "city must be string") do
+#   Reader.new('name', 'email', Array.new, 'street', 'house')
+# end
+
+# check_validation("Test validation for reader city is empty", "city must be not empty") do
+#   Reader.new('name', 'email', '', 'street', 'house')
+# end
+# puts '*****************************************'
+
+
+# def check_validation(street, expected_error_message, &block)
+#   print street
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for reader street is nil", "street must be given") do
+#   Reader.new('name', 'email', 'city', nil, 'house')
+# end
+
+# check_validation("Test validation for reader street is String", "street must be string") do
+#   Reader.new('name', 'email', 'city', Array.new, 'house')
+# end
+
+# check_validation("Test validation for reader street is empty", "street must be not empty") do
+#   Reader.new('name', 'email', 'city', '', 'house')
+# end
+# puts '*****************************************'
+
+# def check_validation(house, expected_error_message, &block)
+#   print house
+#   block.call
+#   puts " -> FAIL!!!"
+# rescue ValidationError => error
+#   result = error.message == expected_error_message
+#   puts result ? ' -> Pass' : ' -> FAIL!!!'
+# end
+
+# puts '**************************************'
+# check_validation("Test validation for reader house is nil", "house must be given") do
+#   Reader.new('name', 'email', 'city', 'street', nil)
+# end
+
+# check_validation("Test validation for reader house is String", "house must be integer") do
+#   Reader.new('name', 'email', 'city', 'street', Array.new)
+# end
+
+# check_validation("Test validation for reader house is positive", "house must be positive") do
+#   Reader.new('name', 'email', 'city', 'street', 0)
+# end
+# puts '*****************************************'
