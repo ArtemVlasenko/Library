@@ -42,7 +42,25 @@ books:
 - !ruby/object:Book
   title: '1'
   author: '1'
+- !ruby/object:Book
+  title: '1'
+  author: '1'
+- !ruby/object:Book
+  title: '1'
+  author: '1'
+- !ruby/object:Book
+  title: '1'
+  author: '1'
 authors:
+- !ruby/object:Author
+  name: '10'
+  biography: '1'
+- !ruby/object:Author
+  name: '10'
+  biography: '1'
+- !ruby/object:Author
+  name: '10'
+  biography: '1'
 - !ruby/object:Author
   name: '10'
   biography: '1'
@@ -142,7 +160,37 @@ orders:
   book: '0'
   reader: '0'
   date: 2022-09-06
+- !ruby/object:Order
+  book: '0'
+  reader: '0'
+  date: 2022-09-13
+- !ruby/object:Order
+  book: '0'
+  reader: '0'
+  date: 2022-09-13
+- !ruby/object:Order
+  book: '0'
+  reader: '0'
+  date: 2022-09-13
 readers:
+- !ruby/object:Reader
+  name: name1
+  email: email1
+  city: city1
+  street: street1
+  house: 1
+- !ruby/object:Reader
+  name: name1
+  email: email1
+  city: city1
+  street: street1
+  house: 1
+- !ruby/object:Reader
+  name: name1
+  email: email1
+  city: city1
+  street: street1
+  house: 1
 - !ruby/object:Reader
   name: name1
   email: email1
