@@ -369,7 +369,7 @@ puts '*****************************************'
 #   Reader.new('name', 'email', 'city', 'street', nil)
 # end
 
-# check_validation("Test validation for reader house is String", "house must be integer") do
+# check_validation("Test validation for reader house is Integer", "house must be integer") do
 #   Reader.new('name', 'email', 'city', 'street', Array.new)
 # end
 
