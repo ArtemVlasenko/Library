@@ -1,4 +1,4 @@
-module Modulevalidation
+module ModuleValidation
   def validate_presence(value, error_message)
     return if !value.nil?
 

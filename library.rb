@@ -1,7 +1,9 @@
 require 'date'
 require 'yaml'
 require 'pry'
-require_relative 'module_validation.rb'
+require_relative 'module_validation'
+require_relative 'tests'
+
 class ValidationError < StandardError
 end
 
@@ -40,6 +42,10 @@ class Library
     "Readers:\n #{@readers.map(&:to_s).join("\n")}"
   end
 
+  def top_readers(quantity = 1)
+    @orders#.
+  end
+
   # def save_to_file
   #   File.open(SAVE_LIBRARY, 'w') do |file|
   #     file.write YAML.dump(self)
@@ -55,7 +61,7 @@ class Library
 end
 
 class Book
-  include Modulevalidation
+  include ModuleValidation
   attr_reader :title, :author
 
   def initialize(title, author)
@@ -85,7 +91,7 @@ class Book
 end
 
 class Author
-  include Modulevalidation
+  include ModuleValidation
   attr_reader :name, :biography
 
   def initialize(name, biography)
@@ -119,7 +125,7 @@ class Author
 end
 
 class Order
-  include Modulevalidation
+  include ModuleValidation
   attr_reader :book, :reader, :date
 
   def initialize(book, reader, date = Date.today)
@@ -155,7 +161,7 @@ class Order
 end
 
 class Reader
-  include Modulevalidation
+  include ModuleValidation
   attr_reader :name, :email, :city, :street, :house
 
   def initialize(name, email, city, street, house)
@@ -212,172 +218,34 @@ class Reader
   end
 end
 
-library = Library.new
-author = Author.new('10', '1')
-book = Book.new('1', '1')
-reader = Reader.new('name1', 'email1', 'city1', 'street1', 1)
-order = Order.new('0', '0')
-library.add_book(book)
-library.add_author(author)
-library.add_order(order)
-library.add_reader(reader)
-# library.save_to_file
-puts library.to_s
+run_validation_tests
 
+# Top Reader
 
-def check_validation(title, expected_error_message, &block)
-  print title
-  block.call
-  puts " -> FAIL!!"
-rescue ValidationError => error
-  result = error.message == expected_error_message
-  puts result ? ' -> Pass' : ' -> FAIL!!!'
+def check_top_reader
+  # AAA principle
+  # Arrange - prepare data for test
+    # Create library
+    library = Library.new
+    # Add 1 Author to library
+    #...Add code here
+    # Add 5 books to library
+    #...Add code here
+    # Add 3 reader to library
+    #...Add code here
+    reader_1 = Reader.new
+    # Create 3 orders for reader_1
+    #...Add code here
+    # Create 2 orders for reader_2
+    #...Add code here
+    # Create 1 order for reader_3
+    #...Add code here
+  # Act - execute
+    result = library.top_readers
+  # Assert - chech execution result
+    puts '*' * 100
+    print 'TOP READER TEST: '
+    puts result == [reader_1] ? "PASS" : 'FAIL'
 end
 
-puts '**************************************'
-check_validation("Test validation for book title is nil", "title must be given") do
-  Book.new(nil, 'author')
-end
-
-check_validation("Test validation for book title is String", "title must be string") do
-  Book.new(Array.new, 'author')
-end
-
-check_validation("Test validation for book title is empty", "title must be not empty") do
-  Book.new('', 'author')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for book author is nil", "author must be given") do
-  Book.new('title', nil)
-end
-
-check_validation("Test validation for book author instance of Author", "author must be an instance of Author") do
-  Book.new('title', author)
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for author name is nil", "name must be given") do
-  Author.new(nil, 'biography')
-end
-
-check_validation("Test validation for author name is String", "name must be string") do
-  Author.new(Array.new, 'biography')
-end
-
-check_validation("Test validation for author name is empty", "name must be not empty") do
-  Author.new('', 'biography')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for author biography is String", "biography must be string") do
-  Author.new('name', Array.new)
-end
-
-check_validation("Test validation for author biography is empty", "biography must be not empty") do
-  Author.new('name', '')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for order book is nil", "book must be given") do
-  Order.new(nil, reader, date = Date.today)
-end
-
-check_validation("Test validation for order book instance of Book", "book must be an instance of Book") do
-  Order.new('book', 'reader')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for order reader is nil", "reader must be given") do
-  Order.new('book', nil, date = Date.today)
-end
-
-check_validation("Test validation for order reader instance of Reader", "reader must be an instance of Reader") do
-  Order.new('book', reader)
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for order date is nil", "date must be given") do
-  Order.new('book', 'reader', nil)
-end
-
-check_validation("Test validation for order date instance of Date", "date must be an instance of Date") do
-  Order.new('book', 'reader', Date)
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for reader name is nil", "name must be given") do
-  Reader.new(nil, 'email', 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader name is String", "name must be string") do
-  Reader.new(Array.new, 'email', 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader name is empty", "name must be not empty") do
-  Reader.new('', 'email', 'city', 'street', 'house')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for reader email is nil", "email must be given") do
-  Reader.new('name', nil, 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader email is String", "email must be string") do
-  Reader.new('name', Array.new, 'city', 'street', 'house')
-end
-
-check_validation("Test validation for reader email is empty", "email must be not empty") do
-  Reader.new('name', '', 'city', 'street', 'house')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for reader city is nil", "city must be given") do
-  Reader.new('name', 'email', nil, 'street', 'house')
-end
-
-check_validation("Test validation for reader city is String", "city must be string") do
-  Reader.new('name', 'email', Array.new, 'street', 'house')
-end
-
-check_validation("Test validation for reader city is empty", "city must be not empty") do
-  Reader.new('name', 'email', '', 'street', 'house')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for reader street is nil", "street must be given") do
-  Reader.new('name', 'email', 'city', nil, 'house')
-end
-
-check_validation("Test validation for reader street is String", "street must be string") do
-  Reader.new('name', 'email', 'city', Array.new, 'house')
-end
-
-check_validation("Test validation for reader street is empty", "street must be not empty") do
-  Reader.new('name', 'email', 'city', '', 'house')
-end
-puts '*****************************************'
-
-puts '**************************************'
-check_validation("Test validation for reader house is nil", "house must be given") do
-  Reader.new('name', 'email', 'city', 'street', nil)
-end
-
-check_validation("Test validation for reader house is Integer", "house must be integer") do
-  Reader.new('name', 'email', 'city', 'street', Array.new)
-end
-
-check_validation("Test validation for reader house is positive", "house must be positive") do
-  Reader.new('name', 'email', 'city', 'street', 0)
-end
-puts '*****************************************'
+check_top_reader
