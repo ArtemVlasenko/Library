@@ -67,6 +67,21 @@ class Book
   def to_s
     "{ title: #{title}, author: #{author} }"
   end
+
+  private
+
+  def validate_book
+    validate_presence(@title, "title must be given")
+    if !@title.is_a?(String)
+      raise ValidationError, "title must be string"
+    elsif @title.empty?
+      raise ValidationError, "title must be not empty"
+    end
+    validate_presence(@author, "author must be given")
+    if @author.is_a?(Author)
+      raise ValidationError, "author must be an instance of Author"
+    end
+  end
 end
 
 class Author
@@ -81,6 +96,25 @@ class Author
 
   def to_s
     "{ name: #{name}, biography: #{biography} }"
+  end
+
+  private
+
+  def validate_autor
+    if @name.nil?
+      raise ValidationError, "name must be given"
+    elsif !@name.is_a?(String)
+      raise ValidationError, "name must be string"
+    elsif @name.empty?
+      raise ValidationError, "name must be not empty"
+    end
+    if @biography
+      if !@biography.is_a?(String)
+      raise ValidationError, "biography must be string"
+      elsif @biography.empty?
+        raise ValidationError, "biography must be not empty"
+      end
+    end
   end
 end
 
@@ -97,6 +131,26 @@ class Order
 
   def to_s
     "{ book: #{book}, reader: #{reader}, date: #{date} }"
+  end
+
+  private
+
+  def validate_order
+    if @book.nil?
+      raise ValidationError, "book must be given"
+    elsif @book.is_a?(Book)
+      raise ValidationError, "book must be an instance of Book"
+    end
+    if @reader.nil?
+      raise ValidationError, "reader must be given"
+    elsif @reader.is_a?(Reader)
+      raise ValidationError, "reader must be an instance of Reader"
+    end
+    if @date.nil?
+      raise ValidationError, "date must be given"
+    elsif !@date.is_a?(Date)
+      raise ValidationError, "date must be an instance of Date"
+    end
   end
 end
 
@@ -115,6 +169,46 @@ class Reader
 
   def to_s
     "{ name: #{name}, email: #{email}, city: #{city}, street: #{street}, house: #{house} }"
+  end
+
+  private
+
+  def validate_reader
+    if @name.nil?
+      raise ValidationError, "name must be given"
+    elsif !@name.is_a?(String)
+      raise ValidationError, "name must be string"
+    elsif @name.empty?
+      raise ValidationError, "name must be not empty"
+    end
+    if @email.nil?
+      raise ValidationError, "email must be given"
+    elsif !@email.is_a?(String)
+      raise ValidationError, "email must be string"
+    elsif @email.empty?
+      raise ValidationError, "email must be not empty"
+    end
+    if @city.nil?
+      raise ValidationError, "city must be given"
+    elsif !@city.is_a?(String)
+      raise ValidationError, "city must be string"
+    elsif @city.empty?
+      raise ValidationError, "city must be not empty"
+    end
+    if @street.nil?
+      raise ValidationError, "street must be given"
+    elsif !@street.is_a?(String)
+      raise ValidationError, "street must be string"
+    elsif @street.empty?
+      raise ValidationError, "street must be not empty"
+    end
+    if @house.nil?
+      raise ValidationError, "house must be given"
+    elsif !@house.is_a?(Integer)
+      raise ValidationError, "house must be integer"
+    elsif !@house.positive?
+      raise ValidationError, "house must be positive"
+    end
   end
 end
 
@@ -194,7 +288,7 @@ check_validation("Test validation for order book is nil", "book must be given") 
 end
 
 check_validation("Test validation for order book instance of Book", "book must be an instance of Book") do
-  Order.new(book, 'reader')
+  Order.new('book', 'reader')
 end
 puts '*****************************************'
 
