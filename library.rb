@@ -1,6 +1,7 @@
 require 'date'
 require 'yaml'
 require 'pry'
+require_relative 'module_validation.rb'
 class ValidationError < StandardError
 end
 
@@ -54,6 +55,7 @@ class Library
 end
 
 class Book
+  include Modulevalidation
   attr_reader :title, :author
 
   def initialize(title, author)
@@ -65,26 +67,10 @@ class Book
   def to_s
     "{ title: #{title}, author: #{author} }"
   end
-
-  private
-
-  def validate_book
-    if @title.nil?
-      raise ValidationError, "title must be given"
-    elsif !@title.is_a?(String)
-      raise ValidationError, "title must be string"
-    elsif @title.empty?
-      raise ValidationError, "title must be not empty"
-    end
-    if @author.nil?
-      raise ValidationError, "author must be given"
-    elsif @author.is_a?(Author)
-      raise ValidationError, "author must be an instance of Author"
-    end
-  end
 end
 
 class Author
+  include Modulevalidation
   attr_reader :name, :biography
 
   def initialize(name, biography)
@@ -96,28 +82,10 @@ class Author
   def to_s
     "{ name: #{name}, biography: #{biography} }"
   end
-
-  private
-
-  def validate_autor
-    if @name.nil?
-      raise ValidationError, "name must be given"
-    elsif !@name.is_a?(String)
-      raise ValidationError, "name must be string"
-    elsif @name.empty?
-      raise ValidationError, "name must be not empty"
-    end
-    if @biography
-      if !@biography.is_a?(String)
-      raise ValidationError, "biography must be string"
-      elsif @biography.empty?
-        raise ValidationError, "biography must be not empty"
-      end
-    end
-  end
 end
 
 class Order
+  include Modulevalidation
   attr_reader :book, :reader, :date
 
   def initialize(book, reader, date = Date.today)
@@ -130,29 +98,10 @@ class Order
   def to_s
     "{ book: #{book}, reader: #{reader}, date: #{date} }"
   end
-
-  private
-
-  def validate_order
-    if @book.nil?
-      raise ValidationError, "book must be given"
-    elsif @book.is_a?(Book)
-      raise ValidationError, "book must be an instance of Book"
-    end
-    if @reader.nil?
-      raise ValidationError, "reader must be given"
-    elsif @reader.is_a?(Reader)
-      raise ValidationError, "reader must be an instance of Reader"
-    end
-    if @date.nil?
-      raise ValidationError, "date must be given"
-    elsif !@date.is_a?(Date)
-      raise ValidationError, "date must be an instance of Date"
-    end
-  end
 end
 
 class Reader
+  include Modulevalidation
   attr_reader :name, :email, :city, :street, :house
 
   def initialize(name, email, city, street, house)
@@ -166,46 +115,6 @@ class Reader
 
   def to_s
     "{ name: #{name}, email: #{email}, city: #{city}, street: #{street}, house: #{house} }"
-  end
-
-  private
-
-  def validate_reader
-    if @name.nil?
-      raise ValidationError, "name must be given"
-    elsif !@name.is_a?(String)
-      raise ValidationError, "name must be string"
-    elsif @name.empty?
-      raise ValidationError, "name must be not empty"
-    end
-    if @email.nil?
-      raise ValidationError, "email must be given"
-    elsif !@email.is_a?(String)
-      raise ValidationError, "email must be string"
-    elsif @email.empty?
-      raise ValidationError, "email must be not empty"
-    end
-    if @city.nil?
-      raise ValidationError, "city must be given"
-    elsif !@city.is_a?(String)
-      raise ValidationError, "city must be string"
-    elsif @city.empty?
-      raise ValidationError, "city must be not empty"
-    end
-    if @street.nil?
-      raise ValidationError, "street must be given"
-    elsif !@street.is_a?(String)
-      raise ValidationError, "street must be string"
-    elsif @street.empty?
-      raise ValidationError, "street must be not empty"
-    end
-    if @house.nil?
-      raise ValidationError, "house must be given"
-    elsif !@house.is_a?(Integer)
-      raise ValidationError, "house must be integer"
-    elsif !@house.positive?
-      raise ValidationError, "house must be positive"
-    end
   end
 end
 
@@ -221,6 +130,7 @@ library.add_reader(reader)
 # library.save_to_file
 puts library.to_s
 
+
 def check_validation(title, expected_error_message, &block)
   print title
   block.call
@@ -230,29 +140,29 @@ rescue ValidationError => error
   puts result ? ' -> Pass' : ' -> FAIL!!!'
 end
 
-# puts '**************************************'
-# check_validation("Test validation for book title is nil", "title must be given") do
-#   Book.new(nil, author)
-# end
+puts '**************************************'
+check_validation("Test validation for book title is nil", "title must be given") do
+  Book.new(nil, 'author')
+end
 
-# check_validation("Test validation for book title is String", "title must be string") do
-#   Book.new(Array.new, author)
-# end
+check_validation("Test validation for book title is String", "title must be string") do
+  Book.new(Array.new, 'author')
+end
 
-# check_validation("Test validation for book title is empty", "title must be not empty") do
-#   Book.new('', author)
-# end
-# puts '*****************************************'
+check_validation("Test validation for book title is empty", "title must be not empty") do
+  Book.new('', 'author')
+end
+puts '*****************************************'
 
-# puts '**************************************'
-# check_validation("Test validation for book author is nil", "author must be given") do
-#   Book.new('title', nil)
-# end
+puts '**************************************'
+check_validation("Test validation for book author is nil", "author must be given") do
+  Book.new('title', nil)
+end
 
-# check_validation("Test validation for book author instance of Author", "author must be an instance of Author") do
-#   Book.new('title', author)
-# end
-# puts '*****************************************'
+check_validation("Test validation for book author instance of Author", "author must be an instance of Author") do
+  Book.new('title', author)
+end
+puts '*****************************************'
 
 puts '**************************************'
 check_validation("Test validation for author name is nil", "name must be given") do
@@ -284,13 +194,13 @@ check_validation("Test validation for order book is nil", "book must be given") 
 end
 
 check_validation("Test validation for order book instance of Book", "book must be an instance of Book") do
-  Order.new(book, reader)
+  Order.new(book, 'reader')
 end
 puts '*****************************************'
 
 puts '**************************************'
 check_validation("Test validation for order reader is nil", "reader must be given") do
-  Order.new(book, 'nil', date = Date.today)
+  Order.new('book', nil, date = Date.today)
 end
 
 check_validation("Test validation for order reader instance of Reader", "reader must be an instance of Reader") do
@@ -298,82 +208,82 @@ check_validation("Test validation for order reader instance of Reader", "reader 
 end
 puts '*****************************************'
 
-# puts '**************************************'
-# check_validation("Test validation for order date is nil", "date must be given") do
-#   Order.new('book', 'reader', nil)
-# end
+puts '**************************************'
+check_validation("Test validation for order date is nil", "date must be given") do
+  Order.new('book', 'reader', nil)
+end
 
-# check_validation("Test validation for order date instance of Date", "date must be an instance of Date") do
-#   Order.new('book', 'reader', Date)
-# end
-# puts '*****************************************'
+check_validation("Test validation for order date instance of Date", "date must be an instance of Date") do
+  Order.new('book', 'reader', Date)
+end
+puts '*****************************************'
 
-# puts '**************************************'
-# check_validation("Test validation for reader name is nil", "name must be given") do
-#   Reader.new(nil, 'email', 'city', 'street', 'house')
-# end
+puts '**************************************'
+check_validation("Test validation for reader name is nil", "name must be given") do
+  Reader.new(nil, 'email', 'city', 'street', 'house')
+end
 
-# check_validation("Test validation for reader name is String", "name must be string") do
-#   Reader.new(Array.new, 'email', 'city', 'street', 'house')
-# end
+check_validation("Test validation for reader name is String", "name must be string") do
+  Reader.new(Array.new, 'email', 'city', 'street', 'house')
+end
 
-# check_validation("Test validation for reader name is empty", "name must be not empty") do
-#   Reader.new('', 'email', 'city', 'street', 'house')
-# end
-# puts '*****************************************'
+check_validation("Test validation for reader name is empty", "name must be not empty") do
+  Reader.new('', 'email', 'city', 'street', 'house')
+end
+puts '*****************************************'
 
-# puts '**************************************'
-# check_validation("Test validation for reader email is nil", "email must be given") do
-#   Reader.new('name', nil, 'city', 'street', 'house')
-# end
+puts '**************************************'
+check_validation("Test validation for reader email is nil", "email must be given") do
+  Reader.new('name', nil, 'city', 'street', 'house')
+end
 
-# check_validation("Test validation for reader email is String", "email must be string") do
-#   Reader.new('name', Array.new, 'city', 'street', 'house')
-# end
+check_validation("Test validation for reader email is String", "email must be string") do
+  Reader.new('name', Array.new, 'city', 'street', 'house')
+end
 
-# check_validation("Test validation for reader email is empty", "email must be not empty") do
-#   Reader.new('name', '', 'city', 'street', 'house')
-# end
-# puts '*****************************************'
+check_validation("Test validation for reader email is empty", "email must be not empty") do
+  Reader.new('name', '', 'city', 'street', 'house')
+end
+puts '*****************************************'
 
-# puts '**************************************'
-# check_validation("Test validation for reader city is nil", "city must be given") do
-#   Reader.new('name', 'email', nil, 'street', 'house')
-# end
+puts '**************************************'
+check_validation("Test validation for reader city is nil", "city must be given") do
+  Reader.new('name', 'email', nil, 'street', 'house')
+end
 
-# check_validation("Test validation for reader city is String", "city must be string") do
-#   Reader.new('name', 'email', Array.new, 'street', 'house')
-# end
+check_validation("Test validation for reader city is String", "city must be string") do
+  Reader.new('name', 'email', Array.new, 'street', 'house')
+end
 
-# check_validation("Test validation for reader city is empty", "city must be not empty") do
-#   Reader.new('name', 'email', '', 'street', 'house')
-# end
-# puts '*****************************************'
+check_validation("Test validation for reader city is empty", "city must be not empty") do
+  Reader.new('name', 'email', '', 'street', 'house')
+end
+puts '*****************************************'
 
-# puts '**************************************'
-# check_validation("Test validation for reader street is nil", "street must be given") do
-#   Reader.new('name', 'email', 'city', nil, 'house')
-# end
+puts '**************************************'
+check_validation("Test validation for reader street is nil", "street must be given") do
+  Reader.new('name', 'email', 'city', nil, 'house')
+end
 
-# check_validation("Test validation for reader street is String", "street must be string") do
-#   Reader.new('name', 'email', 'city', Array.new, 'house')
-# end
+check_validation("Test validation for reader street is String", "street must be string") do
+  Reader.new('name', 'email', 'city', Array.new, 'house')
+end
 
-# check_validation("Test validation for reader street is empty", "street must be not empty") do
-#   Reader.new('name', 'email', 'city', '', 'house')
-# end
-# puts '*****************************************'
+check_validation("Test validation for reader street is empty", "street must be not empty") do
+  Reader.new('name', 'email', 'city', '', 'house')
+end
+puts '*****************************************'
 
-# puts '**************************************'
-# check_validation("Test validation for reader house is nil", "house must be given") do
-#   Reader.new('name', 'email', 'city', 'street', nil)
-# end
+puts '**************************************'
+check_validation("Test validation for reader house is nil", "house must be given") do
+  Reader.new('name', 'email', 'city', 'street', nil)
+end
 
-# check_validation("Test validation for reader house is Integer", "house must be integer") do
-#   Reader.new('name', 'email', 'city', 'street', Array.new)
-# end
+check_validation("Test validation for reader house is Integer", "house must be integer") do
+  Reader.new('name', 'email', 'city', 'street', Array.new)
+end
 
-# check_validation("Test validation for reader house is positive", "house must be positive") do
-#   Reader.new('name', 'email', 'city', 'street', 0)
-# end
-# puts '*****************************************'
+check_validation("Test validation for reader house is positive", "house must be positive") do
+  Reader.new('name', 'email', 'city', 'street', 0)
+end
+puts '*****************************************'
