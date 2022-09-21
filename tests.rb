@@ -67,11 +67,11 @@ def run_validation_tests
 
   puts '**************************************'
   check_validation("Test validation for order book is nil", "book must be given") do
-    Order.new(nil, reader, date = Date.today)
+    Order.new(nil, 'reader', date = Date.today)
   end
 
   check_validation("Test validation for order book instance of Book", "book must be an instance of Book") do
-    Order.new('book', 'reader')
+    Order.new('book', book)
   end
   puts '*****************************************'
 

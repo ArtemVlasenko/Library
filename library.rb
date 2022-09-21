@@ -3,6 +3,10 @@ require 'yaml'
 require 'pry'
 require_relative 'module_validation'
 require_relative 'tests'
+require_relative 'class_book'
+require_relative 'class_author'
+require_relative 'class_order'
+require_relative 'class_reader'
 
 class ValidationError < StandardError
 end
@@ -46,11 +50,11 @@ class Library
     @orders#.
   end
 
-  # def save_to_file
-  #   File.open(SAVE_LIBRARY, 'w') do |file|
-  #     file.write YAML.dump(self)
-  #   end
-  # end
+  def save_to_file
+    File.open(SAVE_LIBRARY, 'w') do |file|
+      file.write YAML.dump(self)
+    end
+  end
 
   def read_from_file
     return unless File.exist?(SAVE_LIBRARY)
@@ -60,163 +64,10 @@ class Library
   end
 end
 
-class Book
-  include ModuleValidation
-  attr_reader :title, :author
-
-  def initialize(title, author)
-    @title = title
-    @author = author
-    validate_book
-  end
-
-  def to_s
-    "{ title: #{title}, author: #{author} }"
-  end
-
-  private
-
-  def validate_book
-    validate_presence(@title, "title must be given")
-    if !@title.is_a?(String)
-      raise ValidationError, "title must be string"
-    elsif @title.empty?
-      raise ValidationError, "title must be not empty"
-    end
-    validate_presence(@author, "author must be given")
-    if @author.is_a?(Author)
-      raise ValidationError, "author must be an instance of Author"
-    end
-  end
-end
-
-class Author
-  include ModuleValidation
-  attr_reader :name, :biography
-
-  def initialize(name, biography)
-    @name = name
-    @biography = biography
-    validate_autor
-  end
-
-  def to_s
-    "{ name: #{name}, biography: #{biography} }"
-  end
-
-  private
-
-  def validate_autor
-    if @name.nil?
-      raise ValidationError, "name must be given"
-    elsif !@name.is_a?(String)
-      raise ValidationError, "name must be string"
-    elsif @name.empty?
-      raise ValidationError, "name must be not empty"
-    end
-    if @biography
-      if !@biography.is_a?(String)
-      raise ValidationError, "biography must be string"
-      elsif @biography.empty?
-        raise ValidationError, "biography must be not empty"
-      end
-    end
-  end
-end
-
-class Order
-  include ModuleValidation
-  attr_reader :book, :reader, :date
-
-  def initialize(book, reader, date = Date.today)
-    @book = book
-    @reader = reader
-    @date = date
-    validate_order
-  end
-
-  def to_s
-    "{ book: #{book}, reader: #{reader}, date: #{date} }"
-  end
-
-  private
-
-  def validate_order
-    if @book.nil?
-      raise ValidationError, "book must be given"
-    elsif @book.is_a?(Book)
-      raise ValidationError, "book must be an instance of Book"
-    end
-    if @reader.nil?
-      raise ValidationError, "reader must be given"
-    elsif @reader.is_a?(Reader)
-      raise ValidationError, "reader must be an instance of Reader"
-    end
-    if @date.nil?
-      raise ValidationError, "date must be given"
-    elsif !@date.is_a?(Date)
-      raise ValidationError, "date must be an instance of Date"
-    end
-  end
-end
-
-class Reader
-  include ModuleValidation
-  attr_reader :name, :email, :city, :street, :house
-
-  def initialize(name, email, city, street, house)
-    @name = name
-    @email = email
-    @city = city
-    @street = street
-    @house = house
-    validate_reader
-  end
-
-  def to_s
-    "{ name: #{name}, email: #{email}, city: #{city}, street: #{street}, house: #{house} }"
-  end
-
-  private
-
-  def validate_reader
-    if @name.nil?
-      raise ValidationError, "name must be given"
-    elsif !@name.is_a?(String)
-      raise ValidationError, "name must be string"
-    elsif @name.empty?
-      raise ValidationError, "name must be not empty"
-    end
-    if @email.nil?
-      raise ValidationError, "email must be given"
-    elsif !@email.is_a?(String)
-      raise ValidationError, "email must be string"
-    elsif @email.empty?
-      raise ValidationError, "email must be not empty"
-    end
-    if @city.nil?
-      raise ValidationError, "city must be given"
-    elsif !@city.is_a?(String)
-      raise ValidationError, "city must be string"
-    elsif @city.empty?
-      raise ValidationError, "city must be not empty"
-    end
-    if @street.nil?
-      raise ValidationError, "street must be given"
-    elsif !@street.is_a?(String)
-      raise ValidationError, "street must be string"
-    elsif @street.empty?
-      raise ValidationError, "street must be not empty"
-    end
-    if @house.nil?
-      raise ValidationError, "house must be given"
-    elsif !@house.is_a?(Integer)
-      raise ValidationError, "house must be integer"
-    elsif !@house.positive?
-      raise ValidationError, "house must be positive"
-    end
-  end
-end
+include ClassBook
+include ClassAuthor
+include ClassOrder
+include ClassReader
 
 run_validation_tests
 
@@ -231,8 +82,10 @@ def check_top_reader
     #...Add code here
     # Add 5 books to library
     #...Add code here
+    @books << first_book = Book.new(title: "", author: "")
     # Add 3 reader to library
     #...Add code here
+    @readers << first_reader = Reader.new(name: "", email: "", city: "", street: "", house: 1)
     reader_1 = Reader.new
     # Create 3 orders for reader_1
     #...Add code here
@@ -243,9 +96,9 @@ def check_top_reader
   # Act - execute
     result = library.top_readers
   # Assert - chech execution result
-    puts '*' * 100
-    print 'TOP READER TEST: '
-    puts result == [reader_1] ? "PASS" : 'FAIL'
+    # puts '*' * 100
+    # print 'TOP READER TEST: '
+    # puts result == [reader_1] ? "PASS" : 'FAIL'
 end
 
 check_top_reader
