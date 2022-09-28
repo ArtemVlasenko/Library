@@ -1,4 +1,3 @@
-module ClassOrder
   class Order
     include ModuleValidation
     attr_reader :book, :reader, :date
@@ -18,13 +17,10 @@ module ClassOrder
 
     def validate_order
       validate_presence(@book, "book must be given")
-      validate_klass(@book, "book must be an instance of Book", Order)
+      validate_klass(@book, "book must be an instance of Book", Book)
       validate_presence(@reader, "reader must be given")
-      validate_klass(@reader, "reader must be an instance of Reader", Order)
+      validate_klass(@reader, "reader must be an instance of Reader", Reader)
       validate_presence(@date, "date must be given")
-      if !@date.is_a?(Date)
-        raise ValidationError, "date must be an instance of Date"
-      end
+      validate_klass(@date, "date must be an instance of Date", Date)
     end
   end
-end

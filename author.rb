@@ -1,4 +1,3 @@
-module ClassAuthor
   class Author
     include ModuleValidation
     attr_reader :name, :biography
@@ -17,10 +16,9 @@ module ClassAuthor
 
     def validate_autor
       validate_presence(@name, "name must be given")
-      validate_string(@name, "name must be string")
+      validate_klass(@name, "name must be string", String)
       validate_empty(@name, "name must be not empty")
-      validate_string(@biography, "biography must be string")
+      validate_klass(@biography, "biography must be string", String)
       validate_empty(@biography, "biography must be not empty")
     end
   end
-end

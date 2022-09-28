@@ -1,4 +1,3 @@
-module ClassBook
   class Book
     include ModuleValidation
     attr_reader :title, :author
@@ -17,10 +16,9 @@ module ClassBook
 
     def validate_book
       validate_presence(@title, "title must be given")
-      validate_string(@title, "title must be string")
+      validate_klass(@title, "title must be string", String)
       validate_empty(@title, "title must be not empty")
       validate_presence(@author, "author must be given")
-      validate_klass(@author, "author must be an instance of Author", Book)
+      validate_klass(@author, "author must be an instance of Author", Author)
     end
   end
-end

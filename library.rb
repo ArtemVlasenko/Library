@@ -3,10 +3,10 @@ require 'yaml'
 require 'pry'
 require_relative 'module_validation'
 require_relative 'tests'
-require_relative 'class_book'
-require_relative 'class_author'
-require_relative 'class_order'
-require_relative 'class_reader'
+require_relative 'book'
+require_relative 'author'
+require_relative 'order'
+require_relative 'reader'
 
 class ValidationError < StandardError
 end
@@ -47,7 +47,9 @@ class Library
   end
 
   def top_readers(quantity = 1)
-    @orders#.
+    # elem = @orders = readers
+    # puts  @orders = readers.size
+
   end
 
   def save_to_file
@@ -64,11 +66,6 @@ class Library
   end
 end
 
-include ClassBook
-include ClassAuthor
-include ClassOrder
-include ClassReader
-
 run_validation_tests
 
 # Top Reader
@@ -80,25 +77,41 @@ def check_top_reader
     library = Library.new
     # Add 1 Author to library
     #...Add code here
+    author = library
     # Add 5 books to library
     #...Add code here
-    @books << first_book = Book.new(title: "", author: "")
+    book_1 = library
+    book_2 = library
+    book_3 = library
+    book_4 = library
+    book_5 = library
     # Add 3 reader to library
     #...Add code here
-    @readers << first_reader = Reader.new(name: "", email: "", city: "", street: "", house: 1)
-    reader_1 = Reader.new
+    reader_1 = library
+    reader_2 = library
+    reader_3 = library
+
     # Create 3 orders for reader_1
     #...Add code here
+    order_1 = reader_1
+    order_2 = reader_1
+    order_3 = reader_1
     # Create 2 orders for reader_2
     #...Add code here
+    order_4 = reader_1
+    order_5 = reader_2
+
     # Create 1 order for reader_3
     #...Add code here
-  # Act - execute
+    order_6 = reader_1
+    order_6 = reader_2
+    order_6 = reader_3
+
     result = library.top_readers
   # Assert - chech execution result
-    # puts '*' * 100
-    # print 'TOP READER TEST: '
-    # puts result == [reader_1] ? "PASS" : 'FAIL'
+    puts '*' * 100
+    print 'TOP READER TEST: '
+    puts result == [reader_1] ? "PASS" : 'FAIL'
 end
 
 check_top_reader
