@@ -33,8 +33,5 @@
       validate_presence(@house, "house must be given")
       validate_klass(@house,"house must be integer", Integer)
       validate_positive(@house, "house must be positive")
-      # if !@house.positive?
-      #   raise ValidationError, "house must be positive"
-      # end
     end
   end

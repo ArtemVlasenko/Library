@@ -18,6 +18,7 @@ def run_validation_tests
   library.add_order(order)
   library.add_reader(reader)
   library.top_readers(quantity = 1)
+  library.popular_books(quantity = 1)
   # library.save_to_file
   puts '**************************************'
   check_validation("Test validation for book title is nil", "title must be given") do
@@ -69,7 +70,7 @@ def run_validation_tests
 
   puts '**************************************'
   check_validation("Test validation for order book is nil", "book must be given") do
-    Order.new(nil, 'reader')
+    Order.new(nil, reader)
   end
 
   check_validation("Test validation for order book instance of Book", "book must be an instance of Book") do

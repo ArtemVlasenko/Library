@@ -47,9 +47,23 @@ class Library
   end
 
   def top_readers(quantity = 1)
-    # elem = @orders = readers
-    # puts  @orders = readers.size
+    result = @orders.group_by do |order|
+      order.reader
+    end
+    top_readers = result.map {|k, array| [k, array.count]}.max_by {|k, array| array}.first
+    # puts top_readers.name
+    # key, top_readers = result.max_by{ |k, array| array.size }
+      # puts top_readers.name
+  end
 
+  def popular_books(quantity = 1)
+    result = @orders.group_by do |order|
+      order.reader
+    end
+
+    # a = result.map {|k, v| [k, books]}.max_by {|k, array| array.size }
+      # puts a
+    binding.pry
   end
 
   def save_to_file
@@ -66,7 +80,7 @@ class Library
   end
 end
 
-run_validation_tests
+# run_validation_tests
 
 # Top Reader
 
@@ -76,38 +90,44 @@ def check_top_reader
     # Create library
     library = Library.new
     # Add 1 Author to library
-    #...Add code here
-    author = library
+    author = Author.new("Taras Shevchenko", "Kobzar")
+    library.add_author(author)
     # Add 5 books to library
-    #...Add code here
-    book_1 = library
-    book_2 = library
-    book_3 = library
-    book_4 = library
-    book_5 = library
+    book_1 = Book.new("Taras_1", author)
+    book_2 = Book.new("Taras_2", author)
+    book_3 = Book.new("Taras_3", author)
+    book_4 = Book.new("Taras_4", author)
+    book_5 = Book.new("Taras_5", author)
+    library.add_book(book_1)
+    library.add_book(book_2)
+    library.add_book(book_3)
+    library.add_book(book_4)
+    library.add_book(book_5)
     # Add 3 reader to library
-    #...Add code here
-    reader_1 = library
-    reader_2 = library
-    reader_3 = library
-
+    reader_1 = Reader.new("Artem", "email_1", "city_1", "street_1", 40)
+    reader_2 = Reader.new("Borya", "email_2", "city_2", "street_2", 50)
+    reader_3 = Reader.new("Dima", "email_3", "city_3", "street_3", 10)
+    library.add_reader(reader_1)
+    library.add_reader(reader_2)
+    library.add_reader(reader_3)
     # Create 3 orders for reader_1
-    #...Add code here
-    order_1 = reader_1
-    order_2 = reader_1
-    order_3 = reader_1
+    order_1 = Order.new(book_1, reader_1)
+    order_2 = Order.new(book_2, reader_1)
+    order_3 = Order.new(book_3, reader_1)
+    library.add_order(order_1)
+    library.add_order(order_2)
+    library.add_order(order_3)
     # Create 2 orders for reader_2
-    #...Add code here
-    order_4 = reader_1
-    order_5 = reader_2
-
+    order_4 = Order.new(book_4, reader_2)
+    order_5 = Order.new(book_5, reader_2)
+    library.add_order(order_4)
+    library.add_order(order_5)
     # Create 1 order for reader_3
-    #...Add code here
-    order_6 = reader_1
-    order_6 = reader_2
-    order_6 = reader_3
+    order_5 = Order.new(book_5, reader_3)
+    library.add_order(order_5)
 
     result = library.top_readers
+    result = library.popular_books
   # Assert - chech execution result
     puts '*' * 100
     print 'TOP READER TEST: '
