@@ -51,7 +51,7 @@ class Library
       order.reader
     end
     top_readers = result.map {|k, array| [k, array.count]}.max_by {|k, array| array}.first
-    # puts top_readers.name
+      puts "top readers #{top_readers.name}"
     # key, top_readers = result.max_by{ |k, array| array.size }
       # puts top_readers.name
   end
@@ -61,9 +61,9 @@ class Library
       order.reader
     end
 
-    # a = result.map {|k, v| [k, books]}.max_by {|k, array| array.size }
-      # puts a
-    binding.pry
+    popular_books = result.map {|k, v| [k, books]}.max_by{|key, value| value}
+      puts "popular_books #{popular_books}"
+    # binding.pry
   end
 
   def save_to_file
